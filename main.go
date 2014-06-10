@@ -4,6 +4,7 @@ import (
 	"flag"
 	"log"
 	"os"
+	"runtime"
 
 	"code.google.com/p/log4go"
 
@@ -43,6 +44,8 @@ func main() {
 	if err = os.MkdirAll(dataDir, 0755); err != nil {
 		log.Fatalf("Error initializing %s: %s", dataDir, err.Error())
 	}
+
+	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	switch verbosity {
 	case 0:
