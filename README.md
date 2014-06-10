@@ -19,7 +19,6 @@ These are not automatically satisfied by "go get"
 
 * websocket support
 * batching support
-* cli configurable logging
 
 ### HTTP API
 
