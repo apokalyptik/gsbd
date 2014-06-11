@@ -17,6 +17,7 @@ These are not automatically satisfied by "go get"
 
 ### TODO
 
+* remove unfriendly compile time dependency on https://github.com/dcjones/hat-trie
 * see if avoiding calling out to C gets us better concurrency in github.com/rjohnsondev/go-safe-browsing-api
 * batch API performance enhancements (possibly remove JSON for marshalling and use 1 line per request/response)
 
