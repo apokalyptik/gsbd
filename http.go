@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"time"
 
+	"code.google.com/p/go.net/websocket"
+
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -89,11 +91,33 @@ func webSafe(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	result, err = gsb.IsListed(url)
 }
 
+func webSocket(ws *websocket.Conn) {
+	defer ws.Close()
+	for {
+		var url string
+		if err := websocket.Message.Receive(ws, &url); err != nil {
+			logger.Warn(fmt.Sprintf("req= err=%s res=null in=nil", url, err.Error()))
+			return
+		}
+		start := time.Now()
+		result, _, _ := gsb.MightBeListed(url)
+		if result != "" {
+			result, _ = gsb.IsListed(url)
+		}
+		if err := websocket.Message.Send(ws, result); err != nil {
+			logger.Warn(fmt.Sprintf("req= err=%s res=null in=%f", url, err.Error(), time.Since(start).Seconds()))
+			return
+		}
+		logger.Info(fmt.Sprintf("req=%s err=nil, res=%s in=%f", url, result, time.Since(start).Seconds()))
+	}
+}
+
 func handleHTTP() {
 	router := httprouter.New()
 	router.GET("/", webIndex)
 	router.GET("/safe/*url", webSafe)
 	router.POST("/batch", webSafeBatch)
 	router.GET("/uptodate/", webUpToDate)
+	router.Handler("GET", "/sock", websocket.Handler(webSocket))
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%d", httpHost, httpPort), router))
 }

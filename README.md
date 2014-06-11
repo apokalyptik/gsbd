@@ -17,8 +17,8 @@ These are not automatically satisfied by "go get"
 
 ### TODO
 
-* websocket support
 * see if avoiding calling out to C gets us better concurrency in github.com/rjohnsondev/go-safe-browsing-api
+* batch API performance enhancements (possibly remove JSON for marshalling and use 1 line per request/response)
 
 ### Performance
 
@@ -64,6 +64,13 @@ Latency distribution:
   95% in 0.0093 secs.
   99% in 0.0153 secs.
 ```
+
+### Websockets API
+
+#### /sock
+
+Used to submit requests. Send a url as plain text, get a text response 
+of "" (safe) or the list that the site is found in
 
 ### HTTP API
 
