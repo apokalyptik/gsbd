@@ -12,11 +12,19 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+func web404(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(404)
+	fmt.Fprint(w, "404 Not Found")
+	logger.Info(fmt.Sprintf("url=%s client=%s status=404", r.URL.String(), r.RemoteAddr))
+}
+
 func webIndex(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	logger.Info(fmt.Sprintf("url=/ client=%s status=200", r.RemoteAddr))
 	fmt.Fprint(w, "ready")
 }
 
 func webUpToDate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	logger.Info(fmt.Sprintf("url=/ client=%s status=200", r.RemoteAddr))
 	if gsb.IsUpToDate() {
 		fmt.Fprintf(w, "true")
 	} else {
@@ -93,10 +101,11 @@ func webSafe(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 func webSocket(ws *websocket.Conn) {
 	defer ws.Close()
+	logger.Info(ws.Request().RemoteAddr)
 	for {
 		var url string
 		if err := websocket.Message.Receive(ws, &url); err != nil {
-			logger.Warn(fmt.Sprintf("req= err=%s res=null in=nil", url, err.Error()))
+			logger.Warn(fmt.Sprintf("req= err=%s res=null in=nil", url))
 			return
 		}
 		start := time.Now()
@@ -119,5 +128,6 @@ func handleHTTP() {
 	router.POST("/batch", webSafeBatch)
 	router.GET("/uptodate/", webUpToDate)
 	router.Handler("GET", "/sock", websocket.Handler(webSocket))
+	router.NotFound = web404
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%d", httpHost, httpPort), router))
 }
