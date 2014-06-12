@@ -3,17 +3,10 @@ gsbd
 
 Google Safe Browsing Daemon
 
-### Dependencies
-
-These are not automatically satisfied by "go get"
-
-* https://github.com/dcjones/hat-trie
-
 ### Installation
 
-1. install dependencies
-2. go get github.com/apokalyptik/gsbd
-3. $GOPATH/bin/gsbd -h
+1. go get github.com/apokalyptik/gsbd
+2. $GOPATH/bin/gsbd -h
 
 ### TODO
 
