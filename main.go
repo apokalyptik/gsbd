@@ -8,7 +8,7 @@ import (
 
 	"code.google.com/p/log4go"
 
-	"github.com/rjohnsondev/go-safe-browsing-api"
+	"github.com/apokalyptik/go-safe-browsing-api"
 )
 
 var apiKey string
