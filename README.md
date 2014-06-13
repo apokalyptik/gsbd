@@ -5,6 +5,12 @@ Google Safe Browsing Daemon
 
 ### Installation
 
+#### The quick and dirty way
+
+1. http://gobuild.io/download/github.com/apokalyptik/gsbd
+
+#### If you have Go and want to build it yourself
+
 1. go get github.com/apokalyptik/gsbd
 2. $GOPATH/bin/gsbd -h
 
